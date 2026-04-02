@@ -15,5 +15,5 @@ export function useGeolocation(onSuccess: (lat: number, lon: number) => void) {
       .catch((err) => {
         console.error(err);
       });
-  }, [onSuccess]);
+  }, []);
 }
