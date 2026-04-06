@@ -4,11 +4,13 @@ import "../styles/styles.css";
 interface SearchSectionProps {
   onSubmit: (city: string) => void;
   isLoading: boolean;
+  error?: string | null;
 }
 
 export const SearchSection: FC<SearchSectionProps> = ({
   onSubmit,
   isLoading,
+  error,
 }) => {
   const [cityName, setCityName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,6 +73,7 @@ export const SearchSection: FC<SearchSectionProps> = ({
             )}
           </button>
         </form>
+        {error && <div className="error-message">{error}</div>}
       </div>
     </section>
   );

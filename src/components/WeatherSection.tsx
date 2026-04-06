@@ -9,7 +9,6 @@ interface WeatherSectionProps {
 export const WeatherSection: React.FC<WeatherSectionProps> = ({
   weatherData,
 }) => {
-  //const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [lastUpdatedText, setLastUpdatedText] = useState(
     "Обновлено только что",
   );
