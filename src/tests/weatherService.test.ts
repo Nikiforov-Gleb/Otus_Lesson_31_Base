@@ -25,6 +25,7 @@ describe("WeatherService", () => {
 
   it("should fetch weather by city and return json", async () => {
     (fetch as Mock).mockResolvedValueOnce({
+      ok: true,
       json: vi.fn().mockResolvedValueOnce(weatherData),
     });
 
@@ -33,6 +34,19 @@ describe("WeatherService", () => {
     expect(fetch).toHaveBeenCalledWith(expect.stringContaining("q=Москва"));
 
     expect(result).toEqual(weatherData);
+  });
+
+  it("should throw error when city not found (response.ok = false)", async () => {
+    const errorResponse = {
+      ok: false,
+      json: vi.fn().mockResolvedValueOnce({ message: "City not found" }),
+    };
+    (fetch as Mock).mockResolvedValueOnce(errorResponse);
+
+    await expect(service.getWeatherByCityName("VV")).rejects.toThrow(
+      "City not found",
+    );
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining("q=VV"));
   });
 
   it("should fetch weather by geolocation and return json with Russian name", async () => {
@@ -57,9 +71,11 @@ describe("WeatherService", () => {
 
     (fetch as Mock)
       .mockResolvedValueOnce({
+        ok: true,
         json: vi.fn().mockResolvedValueOnce(weatherDataWithWrongName),
       })
       .mockResolvedValueOnce({
+        ok: true,
         json: vi.fn().mockResolvedValueOnce(geoData),
       });
 

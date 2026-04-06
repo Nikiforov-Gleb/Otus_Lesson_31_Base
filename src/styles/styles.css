@@ -103,6 +103,12 @@ h6 {
   line-height: 1.25;
 }
 
+.error-message {
+  color: rgb(116, 89, 38);
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
 section {
   margin-bottom: 2.5rem;
 }

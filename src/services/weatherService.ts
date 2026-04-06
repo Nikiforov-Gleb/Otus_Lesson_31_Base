@@ -7,7 +7,13 @@ export class WeatherService {
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?units=metric&lang=ru&q=${cityName}&appid=${this.apiKey}`,
     );
-    return await response.json();
+    const data = await response.json();
+
+    if (!response.ok || data.cod === "404") {
+      throw new Error(data.message || "City not found");
+    }
+
+    return data;
   }
 
   async getWeatherByGeolocation(latitude: number, longitude: number) {
@@ -15,6 +21,11 @@ export class WeatherService {
       `https://api.openweathermap.org/data/2.5/weather?units=metric&lang=ru&lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`,
     );
     const weatherData = await weatherResponse.json();
+
+    if (!weatherResponse.ok || weatherData.cod === "404") {
+      throw new Error(weatherData.message || "Weather data not found");
+    }
+
     const geoResponse = await fetch(
       `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${this.apiKey}`,
     );

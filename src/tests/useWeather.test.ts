@@ -1,4 +1,4 @@
-import { renderHook, act } from "@testing-library/react";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import { useWeather } from "../hooks/useWeather";
 import { WeatherService } from "../services/weatherService";
 import type { WeatherData } from "../data/weatherData";
@@ -46,22 +46,24 @@ describe("useWeather", () => {
     getWeatherMock.mockRestore();
   });
 
-  it("fetchByCity should return null on fail", async () => {
+  it("fetchByCity should throw on fail", async () => {
     const getWeatherMock = vi
       .spyOn(WeatherService.prototype, "getWeatherByCityName")
-      .mockRejectedValue(new Error("Fail"));
+      .mockRejectedValue(new Error("City not found"));
 
     const { result } = renderHook(() => useWeather());
 
     await act(async () => {
-      const data = await result.current.fetchByCity("Moscow");
-      expect(data).toBeNull();
+      await expect(result.current.fetchByCity("VV")).rejects.toThrow(
+        "City not found",
+      );
     });
 
-    expect(result.current.weather).toBeNull();
-    expect(result.current.error).toBe("Ошибка загрузки погоды");
-    expect(result.current.isLoading).toBe(false);
-
+    await waitFor(() => {
+      expect(result.current.weather).toBeNull();
+      expect(result.current.error).toBe("Ошибка загрузки погоды");
+      expect(result.current.isLoading).toBe(false);
+    });
     getWeatherMock.mockRestore();
   });
 });
