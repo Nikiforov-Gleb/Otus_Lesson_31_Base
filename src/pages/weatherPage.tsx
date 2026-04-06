@@ -36,7 +36,7 @@ export const WeatherPage: FC = () => {
 
     loadWeather();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [city]);
 
   const handleSubmit = async (city: string) => {
     try {
